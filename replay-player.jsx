@@ -35,6 +35,7 @@ function showReplay(container, replayData) {
         compositionHeight: 960,
         controls: true,
         loop: true,
+        renderButton: true,
         inputProps: { replayData: adjustedReplayData },
         style: { width: "100%" }
       },

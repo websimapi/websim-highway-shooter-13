@@ -42,8 +42,6 @@ export default class ReplayRecorder {
                 y: e.y,
                 health: e.health,
                 scale: e.width / e.baseWidth,
-                baseWidth: e.baseWidth,
-                baseHeight: e.baseHeight,
                 type: e.type,
             })),
             powerups: this.game.powerups.map(p => ({
@@ -51,12 +49,13 @@ export default class ReplayRecorder {
                 y: p.y,
                 type: p.type
             })),
-            particles: this.game.particles.map(p => ({
-                x: p.x,
-                y: p.y,
-                size: p.size,
-                color: p.color
-            })),
+            // Particles are decorative and create a lot of data. Omitting from replay.
+            // particles: this.game.particles.map(p => ({
+            //     x: p.x,
+            //     y: p.y,
+            //     size: p.size,
+            //     color: p.color
+            // })),
             score: this.game.score,
             bombCount: this.game.player.bombCount
         };
@@ -77,6 +76,24 @@ export default class ReplayRecorder {
 
     getReplayData() {
         return {
+            config: {
+                player: {
+                    width: this.game.player.width,
+                    height: this.game.player.height,
+                },
+                projectile: {
+                    width: 10,
+                    height: 20,
+                },
+                powerup: {
+                    width: 40,
+                    height: 40,
+                },
+                enemy: {
+                    baseWidth: this.game.width * 0.08,
+                    baseHeight: this.game.width * 0.08,
+                }
+            },
             frames: this.frames,
             events: this.events,
             width: this.game.width,
