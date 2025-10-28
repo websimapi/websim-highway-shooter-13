@@ -95,11 +95,10 @@ export default class CollisionHandler {
         });
 
         // Player collisions (game over conditions)
-        const checkPlayerCollision = async (object) => {
+        const checkPlayerCollision = (object) => {
             if (checkCollision(game.player, object)) {
                 game.gameOver = true;
-                const replayData = await game.recorder.getReplayData();
-                game.onGameOver(game.score, replayData);
+                game.onGameOver(game.score);
             }
         };
         game.barrels.forEach(checkPlayerCollision);

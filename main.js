@@ -59,7 +59,7 @@ window.addEventListener('load', () => {
         }
     }
 
-    function showGameOver(score, replayData) {
+    async function showGameOver(score) {
         uiContainer.style.display = 'none';
         gameOverScreen.style.display = 'flex';
         finalScoreEl.textContent = score;
@@ -76,6 +76,15 @@ window.addEventListener('load', () => {
         // To prevent multiple listeners, we clone and replace the button
         const newWatchReplayButton = watchReplayButton.cloneNode(true);
         watchReplayButton.parentNode.replaceChild(newWatchReplayButton, watchReplayButton);
+
+        // Disable button while preparing replay data
+        newWatchReplayButton.disabled = true;
+        newWatchReplayButton.textContent = 'Preparing Replay...';
+
+        const replayData = await game.recorder.getReplayData();
+        
+        newWatchReplayButton.disabled = false;
+        newWatchReplayButton.textContent = 'Watch Instant Replay';
 
         const newBackToScoreButton = backToScoreButton.cloneNode(true);
         backToScoreButton.parentNode.replaceChild(newBackToScoreButton, backToScoreButton);

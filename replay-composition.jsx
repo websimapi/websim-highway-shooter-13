@@ -30,7 +30,7 @@ const findClosestFrameIndex = (frames, targetTime) => {
   }
   return low;
 };
-const ReplayComposition = ({ replayData }) => {
+const ReplayComposition = ({ replayData, assetUrls }) => {
   const frame = useCurrentFrame();
   const { fps, width: compWidth, height: compHeight } = useVideoConfig();
   const currentTime = frame / fps * 1e3;
@@ -47,7 +47,7 @@ const ReplayComposition = ({ replayData }) => {
   const audioElements = replayData.events.map((event, i) => {
     const startFrame = Math.floor(event.time / 1e3 * fps);
     if (frame < startFrame || frame > startFrame + fps / 2) return null;
-    const audioSrc = replayData.audio[event.type];
+    const audioSrc = assetUrls[event.type];
     if (!audioSrc) return null;
     return /* @__PURE__ */ jsxDEV(Audio, { src: audioSrc, startFrom: 0, volume: 0.5 }, `audio-${i}-${startFrame}`, false, {
       fileName: "<stdin>",
@@ -113,7 +113,7 @@ const ReplayComposition = ({ replayData }) => {
             height: scaledBarrelWidth,
             left: radius - faceWidth / 2,
             top: (scaledBarrelHeight - scaledBarrelWidth) / 2,
-            backgroundImage: `url(${replayData.assets.barrelTexture})`,
+            backgroundImage: `url(${assetUrls.barrelTexture})`,
             backgroundSize: `${circumference}px ${scaledBarrelWidth}px`,
             backgroundPosition: `-${j * faceWidth}px 0`,
             transform: `rotateY(${j * (360 / 16)}deg) translateZ(${translateZ}px)`
@@ -161,7 +161,7 @@ const ReplayComposition = ({ replayData }) => {
         /* @__PURE__ */ jsxDEV(
           Img,
           {
-            src: replayData.assets.barrier,
+            src: assetUrls.barrier,
             style: { width: "100%", height: "100%" }
           },
           void 0,
@@ -203,7 +203,7 @@ const ReplayComposition = ({ replayData }) => {
         }, children: /* @__PURE__ */ jsxDEV(
           Img,
           {
-            src: enemy.type === "red" ? replayData.assets.redEnemy : replayData.assets.enemy,
+            src: enemy.type === "red" ? assetUrls.redEnemy : assetUrls.enemy,
             style: { width: "100%", height: "100%" }
           },
           void 0,
@@ -228,7 +228,7 @@ const ReplayComposition = ({ replayData }) => {
       }, children: /* @__PURE__ */ jsxDEV(
         Img,
         {
-          src: replayData.assets.projectile,
+          src: assetUrls.projectile,
           style: { width: "100%", height: "100%" }
         },
         void 0,
@@ -252,7 +252,7 @@ const ReplayComposition = ({ replayData }) => {
       }, children: /* @__PURE__ */ jsxDEV(
         Img,
         {
-          src: powerup.type === "rapidFire" ? replayData.assets.rapidFire : replayData.assets.bomb,
+          src: powerup.type === "rapidFire" ? assetUrls.rapidFire : assetUrls.bomb,
           style: { width: "100%", height: "100%" }
         },
         void 0,
@@ -278,7 +278,7 @@ const ReplayComposition = ({ replayData }) => {
         /* @__PURE__ */ jsxDEV(
           Img,
           {
-            src: replayData.assets.playerShip,
+            src: assetUrls.playerShip,
             style: { width: "100%", height: "100%" }
           },
           void 0,
@@ -292,7 +292,7 @@ const ReplayComposition = ({ replayData }) => {
         /* @__PURE__ */ jsxDEV(
           Img,
           {
-            src: replayData.assets.weapon,
+            src: assetUrls.weapon,
             style: {
               position: "absolute",
               top: "5%",
@@ -345,7 +345,7 @@ const ReplayComposition = ({ replayData }) => {
       }, children: Array.from({ length: frameData.bombCount }).map((_, i) => /* @__PURE__ */ jsxDEV(
         Img,
         {
-          src: replayData.assets.bomb,
+          src: assetUrls.bomb,
           style: {
             width: 50,
             height: 50,
