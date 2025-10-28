@@ -8,7 +8,7 @@ const getDecompressedFrames = (compressedFrames) => {
     return decompressedFramesCache;
   }
   const framesData = fflate.decompressSync(new Uint8Array(compressedFrames));
-  const framesString = fflate.u8rToStr(framesData);
+  const framesString = fflate.strFromU8(framesData);
   decompressedFramesCache = JSON.parse(framesString);
   return decompressedFramesCache;
 };
