@@ -4,6 +4,7 @@ export default class ReplayRecorder {
         this.frames = [];
         this.events = [];
         this.startTime = Date.now();
+        this._assetCache = new Map();
     }
 
     recordFrame() {
@@ -74,8 +75,57 @@ export default class ReplayRecorder {
         });
     }
 
-    getReplayData() {
-        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+    async _uploadAsset(path) {
+        if (this._assetCache.has(path)) {
+            return this._assetCache.get(path);
+        }
+        try {
+            const response = await fetch(path);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch asset: ${path}`);
+            }
+            const blob = await response.blob();
+            const url = await websim.upload(new File([blob], path.split('/').pop()));
+            this._assetCache.set(path, url);
+            return url;
+        } catch (error) {
+            console.error(`Error uploading asset ${path}:`, error);
+            return path; // Fallback to original path on error
+        }
+    }
+
+    async getReplayData() {
+        const assetPaths = {
+            playerShip: 'player_ship.png',
+            weapon: 'weapon.png',
+            projectile: 'projectile.png',
+            barrelTexture: 'barrel_texture.png',
+            barrier: 'barrier.png',
+            enemy: 'enemy.png',
+            redEnemy: 'red_enemy.png',
+            rapidFire: 'rapid_fire.png',
+            bomb: 'bomb.png'
+        };
+
+        const audioPaths = {
+            shoot: 'shoot.mp3',
+            hit: 'hit.mp3',
+            destroy: 'destroy.mp3',
+            shatter: 'shatter.mp3',
+            bomb_explosion: 'bomb_explosion.mp3',
+            bomb_pickup: 'bomb_pickup.mp3'
+        };
+        
+        const uploadedAssets = {};
+        for (const key in assetPaths) {
+            uploadedAssets[key] = await this._uploadAsset(assetPaths[key]);
+        }
+        
+        const uploadedAudio = {};
+        for (const key in audioPaths) {
+            uploadedAudio[key] = await this._uploadAsset(audioPaths[key]);
+        }
+
         return {
             config: {
                 player: {
@@ -99,25 +149,8 @@ export default class ReplayRecorder {
             events: this.events,
             width: this.game.width,
             height: this.game.height,
-            assets: {
-                playerShip: `${baseUrl}player_ship.png`,
-                weapon: `${baseUrl}weapon.png`,
-                projectile: `${baseUrl}projectile.png`,
-                barrelTexture: `${baseUrl}barrel_texture.png`, // Using the texture for the replay
-                barrier: `${baseUrl}barrier.png`,
-                enemy: `${baseUrl}enemy.png`,
-                redEnemy: `${baseUrl}red_enemy.png`,
-                rapidFire: `${baseUrl}rapid_fire.png`,
-                bomb: `${baseUrl}bomb.png`
-            },
-            audio: {
-                shoot: `${baseUrl}shoot.mp3`,
-                hit: `${baseUrl}hit.mp3`,
-                destroy: `${baseUrl}destroy.mp3`,
-                shatter: `${baseUrl}shatter.mp3`,
-                bomb_explosion: `${baseUrl}bomb_explosion.mp3`,
-                bomb_pickup: `${baseUrl}bomb_pickup.mp3`
-            }
+            assets: uploadedAssets,
+            audio: uploadedAudio
         };
     }
 }
