@@ -15,13 +15,13 @@ export default class Enemy {
             this.speed = (0.05 + Math.random() * 0.03) * 0.5; // Slower
             this.health = 20; // 10x more HP
             this.maxHealth = 20;
-            this.image = this.game.assets.redEnemyImage;
+            // this.image is now a getter
             this.texture = this.game.assets.redEnemyTexture;
         } else { // Default green enemy
             this.speed = 0.05 + Math.random() * 0.03; // pixels per ms
             this.health = 2;
             this.maxHealth = 2;
-            this.image = this.game.assets.enemyImage;
+            // this.image is now a getter
             this.texture = this.game.assets.enemyTexture;
         }
 
@@ -57,6 +57,10 @@ export default class Enemy {
         this.healthBarContainer.add(this.healthBarMesh);
         this.healthBarContainer.visible = false;
         this.mesh.add(this.healthBarContainer);
+    }
+
+    get image() {
+        return this.type === 'red' ? this.game.assets.redEnemyImage : this.game.assets.enemyImage;
     }
 
     update(deltaTime) {
