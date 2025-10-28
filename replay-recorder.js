@@ -1,3 +1,5 @@
+import * as fflate from 'fflate';
+
 export default class ReplayRecorder {
     constructor(game) {
         this.game = game;
@@ -75,6 +77,10 @@ export default class ReplayRecorder {
     }
 
     async getReplayData() {
+        // Compress the frames data
+        const framesString = JSON.stringify(this.frames);
+        const compressedFrames = fflate.compressSync(fflate.strToU8(framesString));
+
         const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
 
         const assetPaths = {
@@ -142,6 +148,7 @@ export default class ReplayRecorder {
             height: this.game.height,
             assets: assetBuffers,
             audio: audioBuffers,
+            compressedFrames: compressedFrames.buffer,
         };
     }
 }

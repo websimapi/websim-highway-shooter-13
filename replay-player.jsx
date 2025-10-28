@@ -32,7 +32,10 @@ function showReplay(container, replayData) {
   const durationInFrames = Math.ceil(duration / 1e3 * fps);
   const adjustedReplayData = {
     ...replayData,
-    frames: replayData.frames.map((f) => ({ ...f, time: f.time - firstFrameTime })),
+    frames: void 0,
+    // remove original frames
+    compressedFrames: replayData.compressedFrames,
+    // add compressed frames
     events: replayData.events.map((e) => ({ ...e, time: e.time - firstFrameTime })),
     // We no longer need the buffers, we pass the URLs
     assets: void 0,
@@ -55,7 +58,7 @@ function showReplay(container, replayData) {
         compositionHeight: 960,
         controls: true,
         loop: true,
-        renderButton: true,
+        downloadButton: true,
         inputProps: { replayData: adjustedReplayData, assetUrls: { ...assetUrls, ...audioUrls } },
         style: { width: "100%" }
       },
@@ -63,7 +66,7 @@ function showReplay(container, replayData) {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 61,
+        lineNumber: 62,
         columnNumber: 9
       },
       this
