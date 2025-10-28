@@ -75,7 +75,6 @@ export default class ReplayRecorder {
     }
 
     getReplayData() {
-        const baseUrl = window.location.origin;
         return {
             config: {
                 player: {
@@ -100,23 +99,23 @@ export default class ReplayRecorder {
             width: this.game.width,
             height: this.game.height,
             assets: {
-                playerShip: `${baseUrl}/player_ship.png`,
-                weapon: `${baseUrl}/weapon.png`,
-                projectile: `${baseUrl}/projectile.png`,
-                barrelTexture: `${baseUrl}/barrel_texture.png`, // Using the texture for the replay
-                barrier: `${baseUrl}/barrier.png`,
-                enemy: `${baseUrl}/enemy.png`,
-                redEnemy: `${baseUrl}/red_enemy.png`,
-                rapidFire: `${baseUrl}/rapid_fire.png`,
-                bomb: `${baseUrl}/bomb.png`
+                playerShip: `player_ship.png`,
+                weapon: `weapon.png`,
+                projectile: `projectile.png`,
+                barrelTexture: `barrel_texture.png`, // Using the texture for the replay
+                barrier: `barrier.png`,
+                enemy: `enemy.png`,
+                redEnemy: `red_enemy.png`,
+                rapidFire: `rapid_fire.png`,
+                bomb: `bomb.png`
             },
             audio: {
-                shoot: `${baseUrl}/shoot.mp3`,
-                hit: `${baseUrl}/hit.mp3`,
-                destroy: `${baseUrl}/destroy.mp3`,
-                shatter: `${baseUrl}/shatter.mp3`,
-                bomb_explosion: `${baseUrl}/bomb_explosion.mp3`,
-                bomb_pickup: `${baseUrl}/bomb_pickup.mp3`
+                shoot: `shoot.mp3`,
+                hit: `hit.mp3`,
+                destroy: `destroy.mp3`,
+                shatter: `shatter.mp3`,
+                bomb_explosion: `bomb_explosion.mp3`,
+                bomb_pickup: `bomb_pickup.mp3`
             }
         };
     }
