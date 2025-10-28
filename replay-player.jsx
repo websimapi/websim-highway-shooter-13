@@ -58,7 +58,7 @@ function showReplay(container, replayData) {
         compositionHeight: 960,
         controls: true,
         loop: true,
-        downloadButton: true,
+        downloadButton: "div",
         inputProps: { replayData: adjustedReplayData, assetUrls: { ...assetUrls, ...audioUrls } },
         style: { width: "100%" }
       },

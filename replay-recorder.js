@@ -1,5 +1,16 @@
 import * as fflate from 'fflate';
 
+// A simple pair of functions to handle base64 encoding/decoding of ArrayBuffers
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+}
+
 export default class ReplayRecorder {
     constructor(game) {
         this.game = game;
@@ -80,6 +91,8 @@ export default class ReplayRecorder {
         // Compress the frames data
         const framesString = JSON.stringify(this.frames);
         const compressedFrames = fflate.compressSync(fflate.strToU8(framesString));
+        // Convert to base64 to prevent data corruption during prop passing
+        const compressedFramesBase64 = arrayBufferToBase64(compressedFrames.buffer);
 
         const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
 
@@ -148,7 +161,7 @@ export default class ReplayRecorder {
             height: this.game.height,
             assets: assetBuffers,
             audio: audioBuffers,
-            compressedFrames: compressedFrames.buffer,
+            compressedFrames: compressedFramesBase64,
         };
     }
 }

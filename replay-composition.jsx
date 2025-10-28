@@ -3,10 +3,20 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame, Audio, Img, useVideoConfig } from "remotion";
 import * as fflate from "fflate";
 let decompressedFramesCache = null;
-const getDecompressedFrames = (compressedFrames) => {
+function base64ToArrayBuffer(base64) {
+  const binary_string = window.atob(base64);
+  const len = binary_string.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binary_string.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+const getDecompressedFrames = (compressedFramesBase64) => {
   if (decompressedFramesCache) {
     return decompressedFramesCache;
   }
+  const compressedFrames = base64ToArrayBuffer(compressedFramesBase64);
   const framesData = fflate.decompressSync(new Uint8Array(compressedFrames));
   const framesString = fflate.strFromU8(framesData);
   decompressedFramesCache = JSON.parse(framesString);
@@ -63,7 +73,7 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
     if (!audioSrc) return null;
     return /* @__PURE__ */ jsxDEV(Audio, { src: audioSrc, startFrom: 0, volume: 0.5 }, `audio-${i}-${startFrame}`, false, {
       fileName: "<stdin>",
-      lineNumber: 91,
+      lineNumber: 102,
       columnNumber: 16
     });
   }).filter(Boolean);
@@ -84,7 +94,7 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
         backgroundColor: "rgba(255,255,255,0.3)"
       } }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 107,
+        lineNumber: 118,
         columnNumber: 17
       }),
       /* @__PURE__ */ jsxDEV("div", { style: {
@@ -96,7 +106,7 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
         backgroundColor: "rgba(255,255,255,0.3)"
       } }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 115,
+        lineNumber: 126,
         columnNumber: 17
       }),
       frameData.barrels.map((barrel, i) => {
@@ -131,15 +141,15 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
             transform: `rotateY(${j * (360 / 16)}deg) translateZ(${translateZ}px)`
           } }, j, false, {
             fileName: "<stdin>",
-            lineNumber: 167,
+            lineNumber: 178,
             columnNumber: 41
           })) }, void 0, false, {
             fileName: "<stdin>",
-            lineNumber: 160,
+            lineNumber: 171,
             columnNumber: 33
           }) }, `barrel-3d-${i}`, false, {
             fileName: "<stdin>",
-            lineNumber: 152,
+            lineNumber: 163,
             columnNumber: 29
           }),
           /* @__PURE__ */ jsxDEV("div", { style: {
@@ -154,12 +164,12 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
             zIndex: 10
           }, children: barrel.health }, `barrel-health-${i}`, false, {
             fileName: "<stdin>",
-            lineNumber: 181,
+            lineNumber: 192,
             columnNumber: 29
           })
         ] }, `barrel-fragment-${i}`, true, {
           fileName: "<stdin>",
-          lineNumber: 151,
+          lineNumber: 162,
           columnNumber: 25
         });
       }),
@@ -180,7 +190,7 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
           false,
           {
             fileName: "<stdin>",
-            lineNumber: 207,
+            lineNumber: 218,
             columnNumber: 25
           }
         ),
@@ -195,12 +205,12 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
           textShadow: `0 0 ${4 * scale}px black`
         }, children: barrier.health }, void 0, false, {
           fileName: "<stdin>",
-          lineNumber: 211,
+          lineNumber: 222,
           columnNumber: 25
         })
       ] }, `barrier-${i}`, true, {
         fileName: "<stdin>",
-        lineNumber: 200,
+        lineNumber: 211,
         columnNumber: 21
       })),
       frameData.enemies.map((enemy, i) => {
@@ -222,12 +232,12 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
           false,
           {
             fileName: "<stdin>",
-            lineNumber: 238,
+            lineNumber: 249,
             columnNumber: 29
           }
         ) }, `enemy-${i}`, false, {
           fileName: "<stdin>",
-          lineNumber: 231,
+          lineNumber: 242,
           columnNumber: 25
         });
       }),
@@ -247,12 +257,12 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
         false,
         {
           fileName: "<stdin>",
-          lineNumber: 255,
+          lineNumber: 266,
           columnNumber: 25
         }
       ) }, `projectile-${i}`, false, {
         fileName: "<stdin>",
-        lineNumber: 248,
+        lineNumber: 259,
         columnNumber: 21
       })),
       frameData.powerups.map((powerup, i) => /* @__PURE__ */ jsxDEV("div", { style: {
@@ -271,12 +281,12 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
         false,
         {
           fileName: "<stdin>",
-          lineNumber: 271,
+          lineNumber: 282,
           columnNumber: 25
         }
       ) }, `powerup-${i}`, false, {
         fileName: "<stdin>",
-        lineNumber: 264,
+        lineNumber: 275,
         columnNumber: 21
       })),
       /* @__PURE__ */ jsxDEV("div", { style: {
@@ -297,7 +307,7 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
           false,
           {
             fileName: "<stdin>",
-            lineNumber: 287,
+            lineNumber: 298,
             columnNumber: 21
           }
         ),
@@ -317,18 +327,18 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
           false,
           {
             fileName: "<stdin>",
-            lineNumber: 291,
+            lineNumber: 302,
             columnNumber: 21
           }
         )
       ] }, void 0, true, {
         fileName: "<stdin>",
-        lineNumber: 279,
+        lineNumber: 290,
         columnNumber: 17
       })
     ] }, void 0, true, {
       fileName: "<stdin>",
-      lineNumber: 99,
+      lineNumber: 110,
       columnNumber: 13
     }),
     /* @__PURE__ */ jsxDEV(AbsoluteFill, { style: {
@@ -346,7 +356,7 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
         frameData.score
       ] }, void 0, true, {
         fileName: "<stdin>",
-        lineNumber: 312,
+        lineNumber: 323,
         columnNumber: 17
       }),
       /* @__PURE__ */ jsxDEV("div", { style: {
@@ -368,17 +378,17 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
         false,
         {
           fileName: "<stdin>",
-          lineNumber: 325,
+          lineNumber: 336,
           columnNumber: 25
         }
       )) }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 318,
+        lineNumber: 329,
         columnNumber: 17
       })
     ] }, void 0, true, {
       fileName: "<stdin>",
-      lineNumber: 305,
+      lineNumber: 316,
       columnNumber: 13
     }),
     /* @__PURE__ */ jsxDEV("div", { style: {
@@ -392,12 +402,12 @@ const ReplayComposition = ({ replayData, assetUrls }) => {
       textTransform: "uppercase"
     }, children: "Instant Replay" }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 339,
+      lineNumber: 350,
       columnNumber: 13
     })
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 95,
+    lineNumber: 106,
     columnNumber: 9
   });
 };
