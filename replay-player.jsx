@@ -3,6 +3,16 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Player } from "@websim/remotion/player";
 import { ReplayComposition } from "replay-composition";
+function arrayBufferToDataURL(buffer, mimeType) {
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const base64 = window.btoa(binary);
+  return `data:${mimeType};base64,${base64}`;
+}
 function showReplay(container, replayData) {
   container.innerHTML = '<p style="color: white; text-align: center;">Loading Replay...</p>';
   if (!replayData || !replayData.frames || replayData.frames.length < 2) {
@@ -12,14 +22,12 @@ function showReplay(container, replayData) {
   const assetUrls = {};
   for (const key in replayData.assets) {
     const buffer = replayData.assets[key];
-    const blob = new Blob([buffer]);
-    assetUrls[key] = URL.createObjectURL(blob);
+    assetUrls[key] = arrayBufferToDataURL(buffer, "image/png");
   }
   const audioUrls = {};
   for (const key in replayData.audio) {
     const buffer = replayData.audio[key];
-    const blob = new Blob([buffer]);
-    audioUrls[key] = URL.createObjectURL(blob);
+    audioUrls[key] = arrayBufferToDataURL(buffer, "audio/mpeg");
   }
   const firstFrameTime = replayData.frames[0].time;
   const lastFrameTime = replayData.frames[replayData.frames.length - 1].time;
@@ -42,8 +50,6 @@ function showReplay(container, replayData) {
     audio: void 0
   };
   const cleanup = () => {
-    Object.values(assetUrls).forEach(URL.revokeObjectURL);
-    Object.values(audioUrls).forEach(URL.revokeObjectURL);
   };
   container.innerHTML = "";
   const root = createRoot(container);
@@ -66,7 +72,7 @@ function showReplay(container, replayData) {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 62,
+        lineNumber: 70,
         columnNumber: 9
       },
       this
